@@ -316,7 +316,17 @@ export class Dispatcher {
         const scheme = WeiboConfig.schemeMapping[this.config.scheme];
         const clip = WeiboConfig.clipMapping[this.config.clip];
         const suffix = PConfig.weiboSupportedTypes[item.mimeType].typo;
+         /**  
         const url = Utils.genExternalUrl(scheme, clip, item.pid, suffix);
+       */
+        const originalUrl = Utils.genExternalUrl(scheme, clip, item.pid, suffix);
+		/**
+        在 URL 前面加上 'https://image.baidu.com/search/down?url=   走百度图片缓存服务来规避403
+          */
+        const url = `https://image.baidu.com/search/down?url=${originalUrl}`;
+
+
+        
         const file = item.blob as File;
         const filename = Utils.getFilenameWithoutSuffix(file && file.name);
         const assignedPackedItem = Object.assign(item, {
