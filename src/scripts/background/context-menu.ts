@@ -89,7 +89,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             const item = it.value;
             const suffix = PConfig.weiboSupportedTypes[item.mimeType].typo;
             const { scheme, clip } = await WeiboConfig.getValueMapping();
-            const url = Utils.genExternalUrl(scheme, clip, item.pid, suffix);
+           // const url = Utils.genExternalUrl(scheme, clip, item.pid, suffix);
+            const originalUrl = Utils.genExternalUrl(scheme, clip, item.pid, suffix);
+		// 在 URL 前面加上 'https://image.baidu.com/search/down?url=   走百度图片缓存服务来规避403
+			const url = `https://image.baidu.com/search/down?url=${originalUrl}`;
 
             chrome.tabs.sendMessage<RSS.WriteToClipboard, RSS.WriteToClipboardRes>(
                 tab.id,
